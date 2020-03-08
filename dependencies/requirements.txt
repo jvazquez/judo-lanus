@@ -1,0 +1,11 @@
+asgiref==3.2.3
+Django==3.0.3
+django-filter==2.2.0
+djangorestframework==3.11.0
+Markdown==3.2.1
+pytz==2019.3
+sqlparse==0.3.1
+psycopg2==2.8.4
+uWSGI==2.0.18
+factory-boy==2.12.0
+supervisor==4.0.4

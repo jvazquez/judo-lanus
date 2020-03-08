@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  nginx-manager-api:
+    image: nginx-api-test:latest
+    container_name: vero_nginx_api
+    volumes:
+      - vero-api-django-volume:/services
+    ports:
+      - '8000:8000'
+    depends_on:
+      - api
+    links:
+      - api
+  api:
+    image: vero-api-test:latest
+    container_name: vero_api
+    links:
+      - 'db:psql'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    # Only leaving this here if you need to debug the test environment with supervisor
+    # command: ["supervisord", "-n", "-c","/services/supervisor-conf/api-supervisord-test.conf"]
+    volumes:
+      - vero-api-django-volume:/services
+      - './supervisor-conf/test:/services/supervisor-conf'
+      - './assets/test/vassal:/services/vassal'
+  db:
+    image: postgres:10.10
+    container_name: 'vero_db'
+    ports:
+      - '5432:5432/tcp'
+    env_file:
+      - .env
+networks:
+  default:
+    external:
+      name: vero
+volumes:
+  vero-api-django-volume:
+    external: true

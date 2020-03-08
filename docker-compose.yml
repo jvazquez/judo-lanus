@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  api:
+    image: vero-api-develop:latest
+    container_name: vero_api
+    ports:
+      - '8000:8000/tcp'
+    links:
+      - 'db:psql'
+    volumes:
+      - './vero/:/services/vero'
+      - './supervisor-conf/develop:/services/supervisor-conf'
+    env_file:
+      - .env
+    command: ["supervisord", "-n", "-c","/services/supervisor-conf/api-supervisord-local.conf"]
+    depends_on:
+      - db
+  db:
+    image: postgres:10.10
+    container_name: 'vero_db'
+    ports:
+      - '5432:5432/tcp'
+    env_file:
+      - .env
+networks:
+  default:
+    external:
+      name: vero
